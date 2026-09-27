@@ -1,637 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AI Tutor — Learn AI, Adaptively (Standalone)</title>
-    <style>
-         :root {
-            --bg: #0f1115;
-            --panel: #171a21;
-            --panel2: #1e222b;
-            --border: #2a2f3a;
-            --text: #e8e9ed;
-            --muted: #9aa1ac;
-            --accent: #7c9cff;
-            --good: #5fd694;
-            --warn: #f0b552;
-            --bad: #f26b6b;
-        }
-        
-        * {
-            box-sizing: border-box
-        }
-        
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            min-height: 100%
-        }
-        
-        .wrap {
-            max-width: 760px;
-            margin: 0 auto;
-            padding: 24px 16px 60px
-        }
-        
-        h1 {
-            font-size: 22px;
-            margin: 4px 0 2px
-        }
-        
-        .sub {
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 20px
-        }
-        
-        .card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 12px
-        }
-        
-        .topic {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer
-        }
-        
-        .topic:hover {
-            border-color: var(--accent)
-        }
-        
-        .tname {
-            flex: 1;
-            font-weight: 600
-        }
-        
-        .tmeta {
-            font-size: 12px;
-            color: var(--muted)
-        }
-        
-        .bar {
-            height: 6px;
-            background: var(--panel2);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 6px
-        }
-        
-        .fill {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 4px;
-            transition: width .3s
-        }
-        
-        .locked {
-            opacity: .45;
-            cursor: not-allowed
-        }
-        
-        .badge {
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            color: var(--muted)
-        }
-        
-        .badge.mastered {
-            color: var(--good);
-            border-color: var(--good)
-        }
-        
-        button {
-            background: var(--accent);
-            color: #0f1115;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 16px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px
-        }
-        
-        button.secondary {
-            background: var(--panel2);
-            color: var(--text);
-            border: 1px solid var(--border)
-        }
-        
-        .row {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px
-        }
-        
-        .back {
-            color: var(--muted);
-            cursor: pointer;
-            font-size: 13px;
-            margin-bottom: 14px;
-            display: inline-block
-        }
-        
-        .explain {
-            white-space: pre-wrap;
-            font-size: 14.5px
-        }
-        
-        .opt {
-            display: block;
-            width: 100%;
-            text-align: left;
-            background: var(--panel2);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            font-size: 14px
-        }
-        
-        .opt:hover {
-            border-color: var(--accent)
-        }
-        
-        .opt.correct {
-            border-color: var(--good);
-            background: rgba(95, 214, 148, .12)
-        }
-        
-        .opt.wrong {
-            border-color: var(--bad);
-            background: rgba(242, 107, 107, .12)
-        }
-        
-        .feedback {
-            margin-top: 10px;
-            font-size: 13.5px;
-            color: var(--muted)
-        }
-        
-        .loading {
-            color: var(--muted);
-            font-style: italic;
-            font-size: 13.5px
-        }
-        
-        .top-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline
-        }
-        
-        .streak {
-            font-size: 12px;
-            color: var(--warn)
-        }
-        
-        .error {
-            color: var(--bad);
-            font-size: 13px;
-            margin-top: 8px
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Tutor — Learn AI, Adaptively (Standalone)</title>
+<style>
+:root{
+  --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --border:#2a2f3a;
+  --text:#e8e9ed; --muted:#9aa1ac; --accent:#7c9cff; --good:#5fd694; --warn:#f0b552; --bad:#f26b6b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;min-height:100%}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:22px;margin:4px 0 2px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+.topic{display:flex;align-items:center;gap:12px;cursor:pointer}
+.topic:hover{border-color:var(--accent)}
+.tname{flex:1;font-weight:600}
+.tmeta{font-size:12px;color:var(--muted)}
+.bar{height:6px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-top:6px}
+.fill{height:100%;background:var(--accent);border-radius:4px;transition:width .3s}
+.locked{opacity:.45;cursor:not-allowed}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--border);color:var(--muted)}
+.badge.mastered{color:var(--good);border-color:var(--good)}
+button{background:var(--accent);color:#0f1115;border:none;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer;font-size:14px}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.back{color:var(--muted);cursor:pointer;font-size:13px;margin-bottom:14px;display:inline-block}
+.explain{white-space:pre-wrap;font-size:14.5px}
+.opt{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;font-size:14px}
+.opt:hover{border-color:var(--accent)}
+.opt.correct{border-color:var(--good);background:rgba(95,214,148,.12)}
+.opt.wrong{border-color:var(--bad);background:rgba(242,107,107,.12)}
+.feedback{margin-top:10px;font-size:13.5px;color:var(--muted)}
+.loading{color:var(--muted);font-style:italic;font-size:13.5px}
+.top-row{display:flex;justify-content:space-between;align-items:baseline}
+.streak{font-size:12px;color:var(--warn)}
+.error{color:var(--bad);font-size:13px;margin-top:8px}
+</style>
 </head>
-
 <body>
-    <div class="wrap" id="app"></div>
+<div class="wrap" id="app"></div>
 
-    <script>
-        /* ============================================================
-           PASTE YOUR GEMINI API KEY BELOW.
-           Get one free (no credit card) at https://aistudio.google.com/apikey
-           WARNING: this embeds the key in client-side code — fine for
-           local/personal use in VS Code, NOT safe to deploy publicly
-           (anyone viewing page source could see and use your key).
-           ============================================================ */
-        const API_KEY = "AQ.Ab8RN6Lx6qeB1Rm3wDJJFYBoXQcyKFeStnGYRO_HEpER-ZyZ5Q";
-        const MODEL = "gemini-3.8-flash";
+<script>
+/* ============================================================
+   PASTE YOUR GEMINI API KEY BELOW.
+   Get one free (no credit card) at https://aistudio.google.com/apikey
+   WARNING: this embeds the key in client-side code — fine for
+   local/personal use in VS Code, NOT safe to deploy publicly
+   (anyone viewing page source could see and use your key).
+   ============================================================ */
+const API_KEY = "YOUR_API_KEY_HERE";
+const MODEL = "gemini-3.8-flash";
 
-        const TOPICS = [{
-            id: 'math',
-            name: 'Math & Python Foundations',
-            desc: 'vectors, matrices, derivatives, numpy basics'
-        }, {
-            id: 'ml',
-            name: 'Intro to Machine Learning',
-            desc: 'supervised/unsupervised learning, loss, gradient descent'
-        }, {
-            id: 'nn',
-            name: 'Neural Networks',
-            desc: 'perceptrons, layers, activation functions, backprop'
-        }, {
-            id: 'dl',
-            name: 'Deep Learning & CNNs',
-            desc: 'convolutions, pooling, image models'
-        }, {
-            id: 'nlp',
-            name: 'NLP Fundamentals',
-            desc: 'tokenization, embeddings, sequence models'
-        }, {
-            id: 'transformers',
-            name: 'Transformers & Attention',
-            desc: 'self-attention, positional encoding, architecture'
-        }, {
-            id: 'llm',
-            name: 'LLMs & Prompting',
-            desc: 'how LLMs are trained and prompted effectively'
-        }, {
-            id: 'finetune',
-            name: 'Fine-tuning & RAG',
-            desc: 'adapting models, retrieval-augmented generation'
-        }];
-        const DIAG_IDX = [0, 2, 4];
-        const STORAGE_KEY = 'ai_tutor_progress';
+const TOPICS = [
+  {id:'math', name:'Math & Python Foundations', desc:'vectors, matrices, derivatives, numpy basics'},
+  {id:'ml', name:'Intro to Machine Learning', desc:'supervised/unsupervised learning, loss, gradient descent'},
+  {id:'nn', name:'Neural Networks', desc:'perceptrons, layers, activation functions, backprop'},
+  {id:'dl', name:'Deep Learning & CNNs', desc:'convolutions, pooling, image models'},
+  {id:'nlp', name:'NLP Fundamentals', desc:'tokenization, embeddings, sequence models'},
+  {id:'transformers', name:'Transformers & Attention', desc:'self-attention, positional encoding, architecture'},
+  {id:'llm', name:'LLMs & Prompting', desc:'how LLMs are trained and prompted effectively'},
+  {id:'finetune', name:'Fine-tuning & RAG', desc:'adapting models, retrieval-augmented generation'}
+];
+const DIAG_IDX = [0,2,4];
+const STORAGE_KEY = 'ai_tutor_progress';
 
-        let state = {
-            mastery: {},
-            streak: {},
-            style: 'analogy',
-            diagnosticDone: false,
-            masteredOrder: []
-        };
-        let view = {
-            screen: 'dashboard',
-            topic: null,
-            mode: null,
-            data: null,
-            picked: null
-        };
+let state = { mastery:{}, streak:{}, style:'analogy', diagnosticDone:false, masteredOrder:[] };
+let view = {screen:'dashboard', topic:null, mode:null, data:null, picked:null};
 
-        /* ---------- Gemini API calls (replaces the `sample` capability) ---------- */
-        async function callClaude(prompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
-            const res = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        role: "user",
-                        parts: [{
-                            text: prompt
-                        }]
-                    }]
-                })
-            });
-            if (!res.ok) {
-                const errText = await res.text();
-                throw new Error(`API error ${res.status}: ${errText}`);
-            }
-            const data = await res.json();
-            const candidate = data.candidates && data.candidates[0];
-            const text = candidate && candidate.content && candidate.content.parts ?
-                candidate.content.parts.map(p => p.text || '').join('\n') :
-                '';
-            if (!text) throw new Error('Empty response from Gemini (prompt may have been blocked — check safety filters).');
-            return text;
-        }
-        async function callClaudeJSON(prompt) {
-            const raw = await callClaude(prompt + "\n\nRespond with ONLY the JSON object, no markdown fences, no preamble.");
-            const cleaned = raw.replace(/```json|```/g, '').trim();
-            return JSON.parse(cleaned);
-        }
+/* ---------- Gemini API calls (replaces the `sample` capability) ---------- */
+async function callClaude(prompt){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-goog-api-key": API_KEY
+    },
+    body: JSON.stringify({
+      contents: [{ role: "user", parts: [{ text: prompt }] }]
+    })
+  });
+  if(!res.ok){
+    const errText = await res.text();
+    throw new Error(`API error ${res.status}: ${errText}`);
+  }
+  const data = await res.json();
+  const candidate = data.candidates && data.candidates[0];
+  const text = candidate && candidate.content && candidate.content.parts
+    ? candidate.content.parts.map(p=>p.text||'').join('\n')
+    : '';
+  if(!text) throw new Error('Empty response from Gemini (prompt may have been blocked — check safety filters).');
+  return text;
+}
+async function callClaudeJSON(prompt){
+  const raw = await callClaude(prompt + "\n\nRespond with ONLY the JSON object, no markdown fences, no preamble.");
+  const cleaned = raw.replace(/```json|```/g,'').trim();
+  return JSON.parse(cleaned);
+}
 
-        /* ---------- Persistence via localStorage (replaces the `db` capability) ---------- */
-        function loadProgress() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (raw) state = JSON.parse(raw);
-            } catch (e) {}
-        }
+/* ---------- Persistence via localStorage (replaces the `db` capability) ---------- */
+function loadProgress(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) state = JSON.parse(raw);
+  }catch(e){}
+}
+function saveProgress(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
 
-        function saveProgress() {
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-            } catch (e) {}
-        }
+/* ---------- Learner model helpers ---------- */
+function mastery(id){ return state.mastery[id] || 0; }
+function isUnlocked(i){ return i===0 || mastery(TOPICS[i-1].id) >= 60; }
+function level(id){
+  const m = mastery(id);
+  if(m < 30) return 'beginner';
+  if(m < 70) return 'intermediate';
+  return 'advanced';
+}
+function reviewDue(id){
+  const idx = state.masteredOrder.indexOf(id);
+  if(idx === -1) return false;
+  return (state.masteredOrder.length - 1 - idx) >= 2;
+}
 
-        /* ---------- Learner model helpers ---------- */
-        function mastery(id) {
-            return state.mastery[id] || 0;
-        }
+/* ---------- Rendering ---------- */
+function render(){
+  const app = document.getElementById('app');
+  if(view.screen === 'diagnostic'){ app.innerHTML = renderDiagnostic(); attachDiagnostic(); }
+  else if(view.screen === 'dashboard'){ app.innerHTML = renderDashboard(); attachDashboard(); }
+  else { app.innerHTML = renderTopic(); attachTopic(); }
+}
 
-        function isUnlocked(i) {
-            return i === 0 || mastery(TOPICS[i - 1].id) >= 60;
-        }
+function keyWarning(){
+  return '';
+}
 
-        function level(id) {
-            const m = mastery(id);
-            if (m < 30) return 'beginner';
-            if (m < 70) return 'intermediate';
-            return 'advanced';
-        }
-
-        function reviewDue(id) {
-            const idx = state.masteredOrder.indexOf(id);
-            if (idx === -1) return false;
-            return (state.masteredOrder.length - 1 - idx) >= 2;
-        }
-
-        /* ---------- Rendering ---------- */
-        function render() {
-            const app = document.getElementById('app');
-            if (view.screen === 'diagnostic') {
-                app.innerHTML = renderDiagnostic();
-                attachDiagnostic();
-            } else if (view.screen === 'dashboard') {
-                app.innerHTML = renderDashboard();
-                attachDashboard();
-            } else {
-                app.innerHTML = renderTopic();
-                attachTopic();
-            }
-        }
-
-        function keyWarning() {
-            return '';
-        }
-
-        function renderDiagnostic() {
-            const warn = keyWarning();
-            if (view.mode === 'loading') return `<h1>AI Tutor</h1>${warn}<p class="loading">${view.loadingMsg||'Preparing your diagnostic...'}</p>`;
-            if (view.error) return `<h1>AI Tutor</h1>${warn}<div class="card error">${view.error}</div><div class="row"><button id="retryDiag">Retry</button><button id="skipDiag" class="secondary">Skip, start from zero</button></div>`;
-            if (!view.data) return `<h1>Welcome 👋</h1>${warn}<div class="sub">You said you're starting from scratch — let's set your baseline with a 3-question diagnostic, then build your personalised path.</div><div class="card"><button id="startDiag">Start diagnostic</button> <button id="skipDiag" class="secondary">Skip, start from zero</button></div>`;
-            const q = view.data;
-            return `<h1>Quick diagnostic (${view.diagStep+1}/3)</h1>${warn}
+function renderDiagnostic(){
+  const warn = keyWarning();
+  if(view.mode === 'loading') return `<h1>AI Tutor</h1>${warn}<p class="loading">${view.loadingMsg||'Preparing your diagnostic...'}</p>`;
+  if(view.error) return `<h1>AI Tutor</h1>${warn}<div class="card error">${view.error}</div><div class="row"><button id="retryDiag">Retry</button><button id="skipDiag" class="secondary">Skip, start from zero</button></div>`;
+  if(!view.data) return `<h1>Welcome 👋</h1>${warn}<div class="sub">You said you're starting from scratch — let's set your baseline with a 3-question diagnostic, then build your personalised path.</div><div class="card"><button id="startDiag">Start diagnostic</button> <button id="skipDiag" class="secondary">Skip, start from zero</button></div>`;
+  const q = view.data;
+  return `<h1>Quick diagnostic (${view.diagStep+1}/3)</h1>${warn}
     <div class="card"><p><strong>${q.question}</strong></p>` +
-                q.options.map((o, i) => {
-                    let cls = 'opt';
-                    if (view.picked !== null) {
-                        if (i === q.correct) cls += ' correct';
-                        else if (i === view.picked) cls += ' wrong';
-                    }
-                    return `<button class="${cls}" data-i="${i}" ${view.picked!==null?'disabled':''}>${o}</button>`;
-                }).join('') +
-                (view.picked !== null ? `<div class="row"><button id="nextDiag">${view.diagStep<2?'Next':'See my path'}</button></div>` : '') +
-                `</div>`;
-        }
+    q.options.map((o,i)=>{
+      let cls='opt';
+      if(view.picked!==null){ if(i===q.correct) cls+=' correct'; else if(i===view.picked) cls+=' wrong'; }
+      return `<button class="${cls}" data-i="${i}" ${view.picked!==null?'disabled':''}>${o}</button>`;
+    }).join('') +
+    (view.picked!==null ? `<div class="row"><button id="nextDiag">${view.diagStep<2?'Next':'See my path'}</button></div>` : '') +
+    `</div>`;
+}
 
-        async function askDiagQuestion() {
-            view.mode = 'loading';
-            view.loadingMsg = 'Preparing question ' + (view.diagStep + 1) + ' of 3...';
-            view.error = null;
-            render();
-            const t = TOPICS[DIAG_IDX[view.diagStep]];
-            try {
-                const prompt = `Create ONE short multiple-choice diagnostic question at a moderate difficulty testing basic awareness of "${t.name}" (${t.desc}), for someone who says they know nothing about AI yet — so it should be answerable by reasoning/common sense, not require memorized facts.
+async function askDiagQuestion(){
+  view.mode='loading'; view.loadingMsg='Preparing question '+(view.diagStep+1)+' of 3...'; view.error=null; render();
+  const t = TOPICS[DIAG_IDX[view.diagStep]];
+  try{
+    const prompt = `Create ONE short multiple-choice diagnostic question at a moderate difficulty testing basic awareness of "${t.name}" (${t.desc}), for someone who says they know nothing about AI yet — so it should be answerable by reasoning/common sense, not require memorized facts.
 Return JSON shape: {"question":"...","options":["...","...","...","..."],"correct":0,"explanation":"..."}`;
-                const q = await callClaudeJSON(prompt);
-                view.mode = 'q';
-                view.data = q;
-                view.picked = null;
-            } catch (e) {
-                view.mode = 'q';
-                view.data = null;
-                view.error = 'Could not reach Claude: ' + e.message;
-            }
-            render();
-        }
+    const q = await callClaudeJSON(prompt);
+    view.mode='q'; view.data=q; view.picked=null;
+  }catch(e){ view.mode='q'; view.data=null; view.error='Could not reach Claude: '+e.message; }
+  render();
+}
 
-        function attachDiagnostic() {
-            const startBtn = document.getElementById('startDiag');
-            if (startBtn) startBtn.onclick = async() => {
-                view.diagStep = 0;
-                view.results = [];
-                view.error = null;
-                await askDiagQuestion();
-            };
-            const skipBtn = document.getElementById('skipDiag');
-            if (skipBtn) skipBtn.onclick = () => {
-                state.diagnosticDone = true;
-                saveProgress();
-                view = {
-                    screen: 'dashboard'
-                };
-                render();
-            };
-            const retryBtn = document.getElementById('retryDiag');
-            if (retryBtn) retryBtn.onclick = () => askDiagQuestion();
-            document.querySelectorAll('.opt').forEach(el => {
-                el.onclick = () => {
-                    const i = +el.dataset.i;
-                    if (view.picked !== null) return;
-                    view.picked = i;
-                    view.results.push(i === view.data.correct);
-                    render();
-                };
-            });
-            const nextBtn = document.getElementById('nextDiag');
-            if (nextBtn) nextBtn.onclick = async() => {
-                if (view.diagStep < 2) {
-                    view.diagStep++;
-                    await askDiagQuestion();
-                } else {
-                    finishDiagnostic();
-                }
-            };
-        }
+function attachDiagnostic(){
+  const startBtn = document.getElementById('startDiag');
+  if(startBtn) startBtn.onclick = async ()=>{
+    view.diagStep = 0; view.results = []; view.error=null;
+    await askDiagQuestion();
+  };
+  const skipBtn = document.getElementById('skipDiag');
+  if(skipBtn) skipBtn.onclick = ()=>{ state.diagnosticDone=true; saveProgress(); view={screen:'dashboard'}; render(); };
+  const retryBtn = document.getElementById('retryDiag');
+  if(retryBtn) retryBtn.onclick = ()=>askDiagQuestion();
+  document.querySelectorAll('.opt').forEach(el=>{
+    el.onclick = ()=>{
+      const i = +el.dataset.i;
+      if(view.picked!==null) return;
+      view.picked = i;
+      view.results.push(i === view.data.correct);
+      render();
+    };
+  });
+  const nextBtn = document.getElementById('nextDiag');
+  if(nextBtn) nextBtn.onclick = async ()=>{
+    if(view.diagStep < 2){ view.diagStep++; await askDiagQuestion(); }
+    else { finishDiagnostic(); }
+  };
+}
 
-        function finishDiagnostic() {
-            (view.results || []).forEach((correct, i) => {
-                const t = TOPICS[DIAG_IDX[i]];
-                state.mastery[t.id] = correct ? 55 : 15;
-            });
-            state.diagnosticDone = true;
-            saveProgress();
-            view = {
-                screen: 'dashboard'
-            };
-            render();
-        }
+function finishDiagnostic(){
+  (view.results||[]).forEach((correct,i)=>{
+    const t = TOPICS[DIAG_IDX[i]];
+    state.mastery[t.id] = correct ? 55 : 15;
+  });
+  state.diagnosticDone = true;
+  saveProgress();
+  view = {screen:'dashboard'};
+  render();
+}
 
-        function renderDashboard() {
-            const warn = keyWarning();
-            let rows = TOPICS.map((t, i) => {
-                const m = mastery(t.id);
-                const unlocked = isUnlocked(i);
-                const masteredFlag = m >= 80;
-                const due = reviewDue(t.id);
-                const badge = due ? '<span class="badge" style="color:var(--warn);border-color:var(--warn)">Review due</span>' :
-                    masteredFlag ? '<span class="badge mastered">Mastered</span>' :
-                    unlocked ? `<span class="badge">${level(t.id)}</span>` : '<span class="badge">Locked</span>';
-                return `<div class="card topic ${unlocked?'':'locked'}" data-id="${t.id}" data-idx="${i}">
+function renderDashboard(){
+  const warn = keyWarning();
+  let rows = TOPICS.map((t,i)=>{
+    const m = mastery(t.id);
+    const unlocked = isUnlocked(i);
+    const masteredFlag = m>=80;
+    const due = reviewDue(t.id);
+    const badge = due ? '<span class="badge" style="color:var(--warn);border-color:var(--warn)">Review due</span>'
+                : masteredFlag ? '<span class="badge mastered">Mastered</span>'
+                : unlocked ? `<span class="badge">${level(t.id)}</span>` : '<span class="badge">Locked</span>';
+    return `<div class="card topic ${unlocked?'':'locked'}" data-id="${t.id}" data-idx="${i}">
       <div style="flex:1">
         <div class="top-row"><div class="tname">${t.name}</div>${badge}</div>
         <div class="tmeta">${t.desc}</div>
         <div class="bar"><div class="fill" style="width:${m}%"></div></div>
       </div>
     </div>`;
-            }).join('');
-            const styles = [
-                ['analogy', 'Analogy-first'],
-                ['code', 'Code-first'],
-                ['math', 'Math-first']
-            ];
-            const styleOpts = styles.map(([v, l]) => `<option value="${v}" ${state.style===v?'selected':''}>${l}</option>`).join('');
-            return `<h1>AI Tutor</h1><div class="sub">Personalised learning path for AI fundamentals. Complete a topic (60%+) to unlock the next.</div>
+  }).join('');
+  const styles = [['analogy','Analogy-first'],['code','Code-first'],['math','Math-first']];
+  const styleOpts = styles.map(([v,l])=>`<option value="${v}" ${state.style===v?'selected':''}>${l}</option>`).join('');
+  return `<h1>AI Tutor</h1><div class="sub">Personalised learning path for AI fundamentals. Complete a topic (60%+) to unlock the next.</div>
   ${warn}
   <div class="card" style="display:flex;align-items:center;justify-content:space-between">
     <span class="tmeta">Explanation style</span>
     <select id="styleSel" style="background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px">${styleOpts}</select>
   </div>
   ${rows}`;
-        }
+}
 
-        function attachDashboard() {
-            const sel = document.getElementById('styleSel');
-            if (sel) sel.onchange = () => {
-                state.style = sel.value;
-                saveProgress();
-            };
-            document.querySelectorAll('.topic').forEach(el => {
-                el.addEventListener('click', () => {
-                    const idx = +el.dataset.idx;
-                    if (!isUnlocked(idx)) return;
-                    view = {
-                        screen: 'topic',
-                        topic: TOPICS[idx],
-                        mode: null,
-                        data: null,
-                        picked: null
-                    };
-                    render();
-                });
-            });
-        }
+function attachDashboard(){
+  const sel = document.getElementById('styleSel');
+  if(sel) sel.onchange = ()=>{ state.style = sel.value; saveProgress(); };
+  document.querySelectorAll('.topic').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const idx = +el.dataset.idx;
+      if(!isUnlocked(idx)) return;
+      view = {screen:'topic', topic:TOPICS[idx], mode:null, data:null, picked:null};
+      render();
+    });
+  });
+}
 
-        function renderTopic() {
-            const t = view.topic;
-            const m = mastery(t.id);
-            let body = '';
-            if (view.mode === null) {
-                body = `<div class="row">
+function renderTopic(){
+  const t = view.topic;
+  const m = mastery(t.id);
+  let body = '';
+  if(view.mode === null){
+    body = `<div class="row">
       <button id="btnExplain">Get explanation (${level(t.id)} level)</button>
       <button id="btnQuiz" class="secondary">Practice question</button>
     </div>`;
-            } else if (view.mode === 'loading') {
-                body = `<p class="loading">${view.loadingMsg || 'Thinking...'}</p>`;
-            } else if (view.mode === 'error') {
-                body = `<div class="error">${view.data}</div><div class="row"><button id="btnExplain">Try again</button></div>`;
-            } else if (view.mode === 'explain') {
-                body = `<div class="explain">${view.data}</div><div class="row"><button id="btnQuiz">Try a practice question</button><button id="btnBack2" class="secondary">Back to topic</button></div>`;
-            } else if (view.mode === 'quiz') {
-                const q = view.data;
-                body = `<p><strong>${q.question}</strong></p>` +
-                    q.options.map((o, i) => {
-                        let cls = 'opt';
-                        if (view.picked !== null) {
-                            if (i === q.correct) cls += ' correct';
-                            else if (i === view.picked) cls += ' wrong';
-                        }
-                        return `<button class="${cls}" data-i="${i}" ${view.picked!==null?'disabled':''}>${o}</button>`;
-                    }).join('') +
-                    (view.picked !== null ? `<div class="feedback">${q.explanation}</div><div class="row"><button id="btnQuiz">Next question</button><button id="btnExplain2" class="secondary">Get another explanation</button></div>` : '');
-            }
-            return `<span class="back" id="backBtn">← All topics</span>
+  } else if(view.mode === 'loading'){
+    body = `<p class="loading">${view.loadingMsg || 'Thinking...'}</p>`;
+  } else if(view.mode === 'error'){
+    body = `<div class="error">${view.data}</div><div class="row"><button id="btnExplain">Try again</button></div>`;
+  } else if(view.mode === 'explain'){
+    body = `<div class="explain">${view.data}</div><div class="row"><button id="btnQuiz">Try a practice question</button><button id="btnBack2" class="secondary">Back to topic</button></div>`;
+  } else if(view.mode === 'quiz'){
+    const q = view.data;
+    body = `<p><strong>${q.question}</strong></p>` +
+      q.options.map((o,i)=>{
+        let cls = 'opt';
+        if(view.picked !== null){
+          if(i === q.correct) cls += ' correct';
+          else if(i === view.picked) cls += ' wrong';
+        }
+        return `<button class="${cls}" data-i="${i}" ${view.picked!==null?'disabled':''}>${o}</button>`;
+      }).join('') +
+      (view.picked !== null ? `<div class="feedback">${q.explanation}</div><div class="row"><button id="btnQuiz">Next question</button><button id="btnExplain2" class="secondary">Get another explanation</button></div>` : '');
+  }
+  return `<span class="back" id="backBtn">← All topics</span>
     <h1>${t.name}</h1>
     <div class="top-row"><div class="tmeta">${t.desc}</div><span class="streak">${state.streak[t.id]?('🔥 '+state.streak[t.id]):''}</span></div>
     <div class="bar" style="margin-bottom:16px"><div class="fill" style="width:${m}%"></div></div>
     <div class="card">${body}</div>`;
-        }
+}
 
-        function attachTopic() {
-            const t = view.topic;
-            document.getElementById('backBtn').onclick = () => {
-                view = {
-                    screen: 'dashboard'
-                };
-                render();
-            };
-            const explainBtn = document.getElementById('btnExplain') || document.getElementById('btnExplain2');
-            if (explainBtn) explainBtn.onclick = () => getExplanation(t);
-            const quizBtn = document.getElementById('btnQuiz');
-            if (quizBtn) quizBtn.onclick = () => getQuiz(t);
-            const backBtn2 = document.getElementById('btnBack2');
-            if (backBtn2) backBtn2.onclick = () => {
-                view.mode = null;
-                render();
-            };
-            document.querySelectorAll('.opt').forEach(el => {
-                el.onclick = () => {
-                    const i = +el.dataset.i;
-                    answerQuiz(t, i);
-                };
-            });
-        }
+function attachTopic(){
+  const t = view.topic;
+  document.getElementById('backBtn').onclick = ()=>{ view = {screen:'dashboard'}; render(); };
+  const explainBtn = document.getElementById('btnExplain') || document.getElementById('btnExplain2');
+  if(explainBtn) explainBtn.onclick = ()=>getExplanation(t);
+  const quizBtn = document.getElementById('btnQuiz');
+  if(quizBtn) quizBtn.onclick = ()=>getQuiz(t);
+  const backBtn2 = document.getElementById('btnBack2');
+  if(backBtn2) backBtn2.onclick = ()=>{ view.mode = null; render(); };
+  document.querySelectorAll('.opt').forEach(el=>{
+    el.onclick = ()=>{
+      const i = +el.dataset.i;
+      answerQuiz(t, i);
+    };
+  });
+}
 
-        async function getExplanation(t) {
-            view.mode = 'loading';
-            view.loadingMsg = 'Preparing your explanation...';
-            render();
-            try {
-                const lvl = level(t.id);
-                const styleHint = {
-                    analogy: 'Lean heavily on real-world analogies and intuition, minimal jargon/equations.',
-                    code: 'Use small illustrative Python-like pseudocode snippets to ground concepts.',
-                    math: 'Include the key equations/notation and explain them step by step.'
-                }[state.style];
-                const prompt = `You are an AI tutor teaching "${t.name}" (${t.desc}) as part of a course on how AI works.
+async function getExplanation(t){
+  view.mode = 'loading'; view.loadingMsg = 'Preparing your explanation...'; render();
+  try{
+    const lvl = level(t.id);
+    const styleHint = {analogy:'Lean heavily on real-world analogies and intuition, minimal jargon/equations.', code:'Use small illustrative Python-like pseudocode snippets to ground concepts.', math:'Include the key equations/notation and explain them step by step.'}[state.style];
+    const prompt = `You are an AI tutor teaching "${t.name}" (${t.desc}) as part of a course on how AI works.
 The learner's current level on this topic is: ${lvl} (mastery score ${mastery(t.id)}/100). Preferred style: ${styleHint}
 Write a clear, well-structured explanation calibrated to this level: simpler for beginner, more precise/technical for advanced.
 Keep it focused (250-400 words), use plain text with short paragraphs, no markdown headers.`;
-                const text = await callClaude(prompt);
-                view.mode = 'explain';
-                view.data = text;
-            } catch (e) {
-                view.mode = 'error';
-                view.data = 'Could not generate an explanation: ' + e.message;
-            }
-            render();
-        }
+    const text = await callClaude(prompt);
+    view.mode = 'explain'; view.data = text;
+  }catch(e){
+    view.mode = 'error'; view.data = 'Could not generate an explanation: ' + e.message;
+  }
+  render();
+}
 
-        async function getQuiz(t) {
-            view.mode = 'loading';
-            view.loadingMsg = 'Writing your practice question...';
-            render();
-            try {
-                const lvl = level(t.id);
-                const prompt = `Create ONE multiple-choice practice question testing the topic "${t.name}" (${t.desc}), calibrated for a ${lvl}-level learner (mastery ${mastery(t.id)}/100).
+async function getQuiz(t){
+  view.mode = 'loading'; view.loadingMsg = 'Writing your practice question...'; render();
+  try{
+    const lvl = level(t.id);
+    const prompt = `Create ONE multiple-choice practice question testing the topic "${t.name}" (${t.desc}), calibrated for a ${lvl}-level learner (mastery ${mastery(t.id)}/100).
 Return JSON shape: {"question":"...","options":["...","...","...","..."],"correct":0,"explanation":"1-2 sentence explanation of the correct answer"}
 "correct" is the 0-based index of the correct option. Make distractors plausible.`;
-                const q = await callClaudeJSON(prompt);
-                view.mode = 'quiz';
-                view.data = q;
-                view.picked = null;
-            } catch (e) {
-                view.mode = 'error';
-                view.data = 'Could not generate a question: ' + e.message;
-            }
-            render();
-        }
+    const q = await callClaudeJSON(prompt);
+    view.mode = 'quiz'; view.data = q; view.picked = null;
+  }catch(e){
+    view.mode = 'error'; view.data = 'Could not generate a question: ' + e.message;
+  }
+  render();
+}
 
-        async function answerQuiz(t, i) {
-            if (view.picked !== null) return;
-            view.picked = i;
-            const correct = i === view.data.correct;
-            const delta = correct ? 12 : -5;
-            const wasMastered = mastery(t.id) >= 80;
-            state.mastery[t.id] = Math.max(0, Math.min(100, mastery(t.id) + delta));
-            state.streak[t.id] = correct ? (state.streak[t.id] || 0) + 1 : 0;
-            if (!wasMastered && state.mastery[t.id] >= 80) state.masteredOrder.push(t.id);
-            saveProgress();
-            render();
-        }
+async function answerQuiz(t, i){
+  if(view.picked !== null) return;
+  view.picked = i;
+  const correct = i === view.data.correct;
+  const delta = correct ? 12 : -5;
+  const wasMastered = mastery(t.id) >= 80;
+  state.mastery[t.id] = Math.max(0, Math.min(100, mastery(t.id) + delta));
+  state.streak[t.id] = correct ? (state.streak[t.id]||0) + 1 : 0;
+  if(!wasMastered && state.mastery[t.id] >= 80) state.masteredOrder.push(t.id);
+  saveProgress();
+  render();
+}
 
-        /* ---------- Boot ---------- */
-        loadProgress();
-        view.screen = state.diagnosticDone ? 'dashboard' : 'diagnostic';
-        render();
-    </script>
+/* ---------- Boot ---------- */
+loadProgress();
+view.screen = state.diagnosticDone ? 'dashboard' : 'diagnostic';
+render();
+</script>
 </body>
-
 </html>
