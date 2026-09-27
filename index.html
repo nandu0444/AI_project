@@ -211,14 +211,14 @@
 
     <script>
         /* ============================================================
-           PASTE YOUR ANTHROPIC API KEY BELOW.
-           Get one at https://console.anthropic.com/settings/keys
+           PASTE YOUR GEMINI API KEY BELOW.
+           Get one free (no credit card) at https://aistudio.google.com/apikey
            WARNING: this embeds the key in client-side code — fine for
            local/personal use in VS Code, NOT safe to deploy publicly
            (anyone viewing page source could see and use your key).
            ============================================================ */
-        const API_KEY = "YOUR_API_KEY_HERE";
-        const MODEL = "claude-sonnet-5";
+        const API_KEY = "AQ.Ab8RN6Lx6qeB1Rm3wDJJFYBoXQcyKFeStnGYRO_HEpER-ZyZ5Q";
+        const MODEL = "gemini-3.8-flash";
 
         const TOPICS = [{
             id: 'math',
@@ -271,22 +271,20 @@
             picked: null
         };
 
-        /* ---------- Anthropic API calls (replaces the `sample` capability) ---------- */
+        /* ---------- Gemini API calls (replaces the `sample` capability) ---------- */
         async function callClaude(prompt) {
-            const res = await fetch("https://api.anthropic.com/v1/messages", {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+            const res = await fetch(url, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "x-api-key": API_KEY,
-                    "anthropic-version": "2023-06-01",
-                    "anthropic-dangerous-direct-browser-access": "true"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    model: MODEL,
-                    max_tokens: 1000,
-                    messages: [{
+                    contents: [{
                         role: "user",
-                        content: prompt
+                        parts: [{
+                            text: prompt
+                        }]
                     }]
                 })
             });
@@ -295,7 +293,11 @@
                 throw new Error(`API error ${res.status}: ${errText}`);
             }
             const data = await res.json();
-            const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('\n');
+            const candidate = data.candidates && data.candidates[0];
+            const text = candidate && candidate.content && candidate.content.parts ?
+                candidate.content.parts.map(p => p.text || '').join('\n') :
+                '';
+            if (!text) throw new Error('Empty response from Gemini (prompt may have been blocked — check safety filters).');
             return text;
         }
         async function callClaudeJSON(prompt) {
